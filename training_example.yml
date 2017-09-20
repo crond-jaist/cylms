@@ -1,0 +1,24 @@
+---
+- training:
+  - id: EXAMPLE
+    title: Example training questions for cnt2lms
+    overview: |
+      <p>These are two example questions that demonstrate how to define training content for cnt2lms. Please check how the questions are displayed after they are converted to a SCORM package and uploaded to Moodle.</p>
+
+    questions:
+    - id: EX-1
+      body: What is the name of the Linux distribution used by this server? Indicate only the name, without version or architecture, e.g., CentOS.
+      answer: Ubuntu
+      hints:
+        - The directory <code>/etc/</code> contains various files with information regarding a Linux distribution.
+        - One of the most relevant files has a name ending in "release".
+        - <code>$ cat /etc/*-release</code>
+
+    - id: EX-2
+      body: What is the name of the account you are logged in as?
+      choices: root, admin, guest01, trainee01
+      answer: trainee01
+      hints:
+        - The account name is typically the same with the name of the user's home directory.
+        - "Have you ever asked yourself: Who am I?"
+        - <code>$ whoami</code>
