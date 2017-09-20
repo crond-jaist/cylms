@@ -9,7 +9,7 @@ If interested, please download the latest release of cnt2lms, and let us know if
 Run cnt2lms.py with a configuration file:
 * Example: ./cnt2lms.py config_example 
 
-## Program modules
+## Program details
 The program includes 3 components:
 * yamlParser.py: Core module that reads a training content file and creates a SCORM package based on it
 * copyToMoodle.py: Helper modules that copies the SCORM package to a Moodle repository
