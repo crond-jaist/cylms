@@ -1,0 +1,60 @@
+
+cnt2lms v0.3.0
+--------------
+* Improved robustness when dealing with incorrect/missing input files
+* Renamed two training fields to better convey their meaning, as well
+  as use in the generated SCORM package: "description" => "title";
+  "header" => "overview"
+* Made "level" field in training optional (hence it can now be omitted
+  if not needed)
+* Renamed a question field to reduce confusion with similar named
+  ones: "content" => "body"
+* Made "type" field of question optional (as question type can now be
+  auto-detected), and modified one of the accepted values: "fill" =>
+  "fill-in"
+* Renamed field indicating available options for multiple-choice
+  questions: "choice" => "choices", and simplified the input format,
+  so that double quote symbols are not required anymore
+* Simplified syntax for "hints" array of questions, by eliminating the
+  prefix "hint:", and fixed an issue related to the case when the tag
+  "hints" does not appear
+* Eliminated unnecessary buttons "Previous" and "Next" from SCORM
+  template
+* Minor bug fixes and improvements
+
+cnt2lms v0.2.3
+--------------
+* Fixed issue in controller file
+* Update the program version and added banner
+
+cnt2lms v0.2.2
+--------------
+* Fixed support for Japanese in question answers
+* Changed main program's name to cnt2lms
+
+cnt2lms v0.2.1
+--------------
+* Added support for Japanese language in input files
+
+cnt2lms v0.2.0
+--------------
+* Performed modularization of the program into three components:
+  yamlParser.py, copyToMoodle.py and controller.py
+
+cnt2lms v0.1.3
+--------------
+* Added option in con figuration file to copy or not SCORM package
+* Fixed error with content which include double quote symbols
+
+cnt2lms v0.1.2
+--------------
+* Read destination from config file and overwrite SCORM package at
+  that location
+
+cnt2lms v0.1.1
+--------------
+* Added function to create SCORM package
+
+cnt2lms v0.1.0
+--------------
+* Created the first version
