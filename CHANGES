@@ -1,6 +1,6 @@
 
-cnt2lms v0.3.0
---------------
+cnt2lms v0.3
+------------
 * Improved robustness when dealing with incorrect/missing input files
 * Renamed two training fields to better convey their meaning, as well
   as use in the generated SCORM package: "description" => "title";
