@@ -5,6 +5,7 @@ yamlParser.py
 # -*- coding: utf-8 -*-
 
 from distutils import dir_util
+from distutils.errors import DistutilsFileError
 from shutil import copy2
 #import zipfile
 import os
@@ -15,6 +16,9 @@ import codecs
 import re
 import logging
 import yaml
+
+from storyboard import Storyboard
+
 logging.basicConfig(level=logging.DEBUG, \
 #                    format='%(asctime)s - %(filename)s - %(levelname)s - %(message)s')
                     format='* %(levelname)s: %(filename)s: %(message)s')
@@ -23,46 +27,6 @@ TEMPLATE_DIR = 'Template' # Template SCORM package
 
 #Enable if you need to debug the content
 debug = 0
-
-
-# Storyboard for YAML keys and values for cnt2lms files
-class Storyboard:
-
-    # Top section about training
-    KEY_TRAINING = "training"
-    KEY_ID = "id"
-    KEY_TITLE = "title"
-    KEY_OVERVIEW = "overview"
-    KEY_LEVEL = "level"
-    KEY_QUESTIONS = "questions"
-
-    # Sub-section about questions
-    #KEY_ID = "id"
-    KEY_TYPE = "type"
-    VALUE_TYPE_FILL_IN = "fill-in"
-    VALUE_TYPE_CHOICE = "choice"
-    VALUE_TYPE_NUMERIC = "numeric"
-    KEY_BODY = "body"
-    KEY_CHOICES = "choices"
-    KEY_ANSWER = "answer"
-    KEY_HINTS = "hints"
-
-    # Tags in SCORM package
-    ## Tag below appears in Template/imsmanifest.xml
-    TAG_TRAINING_ID = "training_id"
-
-    ## Tags below appear in Template/shared/assessmenttemplate.html
-    TAG_TRAINING_LEVEL = "training_level"
-    TAG_TRAINING_TITLE = "training_title"
-    TAG_TRAINING_OVERVIEW = "training_overview"
-
-    ## Tags below appear in Template/Playing/questions.js
-    TAG_QUESTION_ID = "questionId"
-    TAG_QUESTION_BODY = "questionBody"
-    TAG_QUESTION_TYPE = "questionType"
-    TAG_QUESTION_ANSWER = "questionAnswer"
-    TAG_QUESTION_CORRECT_ANSWER = "questionCorrectAnswer"
-    TAG_QUESTION_OBJECTIVE_ID = "questionObjectiveId"
 
 def addQuestion(questionFile,questionFileTemporary,questionId,questionBody,\
                 questionType,questionAnswer,questionCorrectAnswer,questionHints):
@@ -224,34 +188,30 @@ def zipdir(path, ziph):
         for file in files:
             ziph.write(os.path.join(root, file)) 
 
-def copyToRepository(copyOrNot, package_name, destination):
-    #Copy SCORM package to Moodle repository
-    if debug == 1:
-        logging.info("\nConfig information:")
-        logging.info("copyOrNot = " + copyOrNot)
-        logging.info("destination = " + destination)
-    if copyOrNot != '1': return 0
-    else: os.system("cp -f %s %s" %( package_name, destination))
-
-def readConfigFile(config_file, attribute):
+# Get option from configuration file (return None if option is not present)
+def getOption(config_file, option):
     Config = ConfigParser.ConfigParser()
     Config.read(config_file)
-    dictionary = {}
-    for option in Config.options('config'):
-        dictionary[option] = Config.get('config',option)
-    return dictionary[attribute]
-
+    if Config.has_option(Storyboard.CONFIG_SECTION, option):
+        if option == Storyboard.CONFIG_ENABLE_COPY:
+            return Config.getboolean(Storyboard.CONFIG_SECTION, option)
+        else:
+            return Config.get(Storyboard.CONFIG_SECTION, option)
+    else:
+        return None
 
 #####################################################################
 ## START MAIN FUNCTION ##
-def yamlToSCORM(config, dir_path):
-    #This parsing only work with this yaml structure (with 1 set of question)
+def yamlToSCORM(config_file, dir_path):
 
-    input_file = readConfigFile(config, 'source')
-    logging.info("Parse file: " + input_file)
+    # NOTE: This parsing only works with YAML structure with 1 question set
 
-    #Dictionary to store all information of a training
-    #info_dict = {}
+    input_file = getOption(config_file, Storyboard.CONFIG_INPUT_FILE)
+    if input_file:
+        logging.info("Parse input file: " + input_file)
+    else:
+        logging.error("Setting for '{}' missing in configuration file '{}'.".format(Storyboard.CONFIG_INPUT_FILE, config_file))
+        quit(-1)
 
     # Build sets with valid keys for training and question sections
     valid_training_keys = set([Storyboard.KEY_ID, Storyboard.KEY_TITLE, Storyboard.KEY_OVERVIEW, Storyboard.KEY_LEVEL, Storyboard.KEY_QUESTIONS])
@@ -307,12 +267,16 @@ def yamlToSCORM(config, dir_path):
 
                         # Define training name and make new package folder for new SCORM package
                         training_name = k[Storyboard.KEY_ID]
-                        
+
                         # Change the training name to the full path directory:
                         training_name = str(dir_path) + "/" + str(training_name)
-                        
+
                         # Copy from the template package to the new package
-                        dir_util.copy_tree((str(dir_path) + "/" + TEMPLATE_DIR), training_name)
+                        try:
+                            dir_util.copy_tree((str(dir_path) + "/" + TEMPLATE_DIR), training_name)
+                        except DistutilsFileError as e:
+                            logging.error("Issue when copying template: " + str(e))
+                            quit(-1)
 
                         # Add questions to temporary file
                         # Work flow: get template from question.js, fill in the content for each question and add one by one question into temporary file. After finish, replace question.js by the temporary file and delete the temporary one.
@@ -388,10 +352,14 @@ def yamlToSCORM(config, dir_path):
                         copy2(manifest_file_temporary,manifest_file)
                         os.remove(manifest_file_temporary)
                         
-                        #Create SCORM package
-                        logging.info("Create SCORM package: " + readConfigFile(config,'package_name'))
-                        
-                        os.system("cd %s; zip -q -r %s *" %(training_name, readConfigFile(config,'package_name')))
+                        # Create SCORM package
+                        package_name = getOption(config_file, Storyboard.CONFIG_PACKAGE_NAME)
+                        if package_name:
+                            logging.info("Create SCORM package: " + package_name)
+                            os.system("cd %s; zip -q -r %s *" %(training_name, package_name))
+                        else:
+                            logging.error("Setting for '{}' missing in configuration file '{}'.".format(Storyboard.CONFIG_PACKAGE_NAME, config_file))
+                            quit(-1)
 
     except (IOError, yaml.YAMLError) as e:
         logging.error(e)
