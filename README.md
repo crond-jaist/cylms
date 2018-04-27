@@ -56,16 +56,16 @@ The two main operations supported by CyLMS are:
 
 1. **Convert training content to SCORM package and add it to LMS**
 
-    The command below converts the sample training content file
-    `training_example` using the configuration file `config_example`,
-    and adds the generated SCORM package to LMS as `Training Session
-    #1`:
+   The command below converts the sample training content file
+   `training_example` using the configuration file `config_example`,
+   and adds the generated SCORM package to LMS as `Training Session
+   #1`:
 
-    `$ ./cylms.py --convert-content training_example.yml --config-file config_example
+   `$ ./cylms.py --convert-content training_example.yml --config-file config_example
 --add-to-lms 1`
 
-    NOTE: The above command will display an activity id which is
-    required for the operation below.
+   NOTE: The above command will display an activity id which is
+   required for the operation below.
 
 2. **Remove a training activity from LMS**
 
