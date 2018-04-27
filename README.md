@@ -67,7 +67,7 @@ The two main operations supported by CyLMS are:
    NOTE: The above command will display an activity id which is
    required for the operation below.
 
-2. **Remove a training activity from LMS**
+2. **Remove a training session from LMS**
 
    The command below uses the configuration file `config_example` to
    remove `Training Session #1`. We denote the activity id returned by
@@ -104,3 +104,15 @@ For your convenience we also provide some sample files:
   repository directory, course name, etc. This file needs to be
   updated if you modify the provided Moodle VM, or you set up your own
   Moodle host.
+
+
+## References
+
+For a research background about CyLMS, please consult the following paper:
+
+* D. Tang, C. Pham, K. Chinen, R. Beuran, "Interactive Cybersecurity
+  Defense Training Inspired by Web-based Learning Theory", IEEE 9th
+  International Conference on Engineering Education (ICEED 2017),
+  Kanazawa, Japan, November 9-10, 2017, pp. 103-108.
+
+For the list of contributors, please check the file CONTRIBUTORS.
