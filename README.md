@@ -2,16 +2,16 @@
 
 CyLMS is a set of tools for adding cybersecurity training support to
 Learning Management Systems (LMS). The main feature of CyLMS is
-related to the conversion of training content representation in YAML
-format to the SCORM format which is widely used in LMSs. In addition,
-CyLMS provides a certain integration with the Moodle LMS, for
+related to the conversion of a custom training content representation
+in YAML format to the SCORM format that is widely used in LMSs. In
+addition, CyLMS provides integration with the Moodle LMS, for
 operations such as dynamically adding and removing activities to
 it. CyLMS is being developed by the Cyber Range Organization and
 Design (CROND) NEC-endowed chair at the Japan Advanced Institute of
 Science and Technology (JAIST). An overview of CyLMS is provided in
 the figure below.
 
-![Overview of CyLMS](https://github.com/crond-jaist/cylms/blob/master/cylms_overview.png "Overview of CyLMS")
+![Overview of CyLMS](https://github.com/crond-jaist/cnt2lms/blob/master/cylms_overview.png)
 
 If interested, please download the latest release of CyLMS, and let us
 know if you have any issues. A sample Moodle virtual machine and a
@@ -19,61 +19,88 @@ User Guide are also provided. Note that CyLMS is mainly intended for
 use in conjunction with the integrated cybersecurity training
 framework CyTrONE, which is also developed by CROND at JAIST.
 
+
 ## Quick Start
 
-This section provides a brief introduction on how to use CyLMS.
+This section provides a brief introduction on how to use CyLMS; please
+refer to the User Guide for details.
 
 ### Setup
+
 In order to setup CyLMS, the following steps are required:
 
-* Download and extract the current release source code from GitHub
+* Download and extract the current release source code from GitHub:
+
+  `$ tar -zxvf cylms-X.Y.tar.gz --directory /target/directory`
 
 * Download and run the file "create_scorm_template.sh" to create the
   SCORM package template required by CyLMS:
-  $ /path/to/create_scorm_template.sh /full/path/to/cylms
 
-* Create a configuration file with details about the LMS host, course
-  name, etc. If you are using the provided Moodle VM, the sample
-  "config_example" can be used as such. Otherwise you will need to set
-  up your own Moodle host (for details see the User Guide)
+  `$ /path/to/create_scorm_template.sh /full/path/to/cylms`
 
-### Basic operation
+* Download and start the sample Moodle VM that is also provided on
+  GitHub:
 
-There are two main operations possible via CyLMS:
+  `$ tar -zxvf moodle.tgz`
 
-* Convert a training content file to SCORM package and add it to
-  LMS. The example below converts the sample content file
-  "training_example" using the configuration file "config_example" and
-  adds the generated SCORM package to LMS as training session #1:
+  `$ virsh define moodle.xml`
 
-  $ ./cylms.py --convert-content training_example.yml --config-file config_example
---add-to-lms 1
+  `$ virsh start moodle`
 
-* Remove a training activity from LMS. The example below uses again
-the configuration file "config_example" and removes training session
-#1, assuming the activity id returned by the add-to-lms command was
-"10" (this needs to be change based on the actual returned value when
-you execute the previous command)
+  NOTE: It is also possible to set up your own Moodle host; if you
+  prefer to do so, follow the instructions in the User Guide.
 
- $ ./cylms.py --config-file config_example --remove-from-lms 1,10
- 
+### Utilization
+
+The two main operations supported by CyLMS are:
+
+1. **Convert training content to SCORM package and add it to LMS**
+
+  The command below converts the sample training content file
+  `training_example` using the configuration file `config_example`,
+  and adds the generated SCORM package to LMS as `Training Session
+  #1`:
+
+  `$ ./cylms.py --convert-content training_example.yml --config-file config_example
+--add-to-lms 1`
+
+  NOTE: The above command will display an activity id which is
+  required for the operation below.
+
+2. **Remove a training activity from LMS**
+
+  The command below uses the configuration file `config_example` to
+  remove `Training Session #1`. We denote the activity id returned by
+  the `add-to-lms` operation above by `ID`, which should be replaced
+  with the actual value displayed after executing the previous
+  command:
+
+  `$ ./cylms.py --config-file config_example --remove-from-lms 1,ID`
+
+
 ## Program overview
 
-Below we provide a brief overview of CyLMS. The tool set includes
-several components:
+Below we provide a brief overview of the main CyLMS components:
 
-* cylms: Main program of the tool set which is used to provide all the
-  functionality implemented in the other modules
-* cnt2lms: Core module that converts a given training content
-  description file to an equivalent SCORM pacage
-* lms_mgmt.py: Module that containt management functionality related
-  to LMS, such as adding and removing activities, etc.
-* cfg_mgmt.py: Module for managing the configuration files
+* `cylms.py`: Main program used to access all the functionality
+  provided by CyLMS.
 
-Details about the training content representation used in CyLMS are
-provided in the User Guide, and a sample training content file named
-'training_example.yml' is provided with the source code.
+* `cnt2lms`: Core module that converts a given training content
+  description file to an equivalent SCORM package.
 
-The configuration file contains settings regarding the LMS that is to
-be managed via CyLMS, such as host name, repository directory, related
-course name, etc. See the file 'config_example' for an example.
+* `lms_mgmt.py`: Module that contains integration support with the
+  Moodle LMS, such as adding and removing activities, etc.
+
+* `cfg_mgmt.py`: Module used for managing the configuration file.
+
+For your convenience we also provide some sample files:
+
+* `training_example.yml`: Example training content file; for details
+  about the training content representation used in CyLMS see the User
+  Guide.
+
+* `config_example`: Example configuration file with settings regarding
+  the Moodle LMS that is to be managed via CyLMS, such as host name,
+  repository directory, course name, etc. This file needs to be
+  updated if you modify the provided Moodle VM, or you set up your own
+  Moodle host.
