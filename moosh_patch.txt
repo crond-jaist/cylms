@@ -1,0 +1,33 @@
+--- ActivityAdd.php-orig	2017-10-17 00:47:02.000000000 +0900
++++ ActivityAdd.php	2018-04-24 17:11:22.315103572 +0900
+@@ -68,6 +68,19 @@
+ 
+         $moduledata->section = $options['section'];
+ 
++        // Added by CROND
++        //print_r($options);
++        if (!empty($options['options'])) {
++            $option_array = explode(",", $options['options']); echo "\n";
++            foreach($option_array as &$option) {
++                $keyvalue_array = explode("=", $option);
++                $key = $keyvalue_array[0];
++                $value = $keyvalue_array[1];
++                //echo "Key: {$key} => Value: {$value}\n";
++                $moduledata->$key = $value;
++            }
++        }
++        // End added by CROND
+         $record = $generator->create_module($this->arguments[0], $moduledata);
+ 
+         if ($this->verbose) {
+@@ -76,6 +89,10 @@
+ 
+         // Return the activity id.
+         echo "{$record->id}\n";
++        // Added by CROND
++        echo "cmid={$record->cmid}\n";
++        //print_r($record);
++        // End added by CROND
+     }
+ 
+ }

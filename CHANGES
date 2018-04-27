@@ -1,4 +1,25 @@
 
+CyLMS v1.0
+----------
+* Renamed the tool set from cnt2lms to CyLMS; the main program called
+  cylms.py is now the entry point for accessing all the functionality
+  provided by CyLMS
+* Reorganized the source code in order to better reflect the extended
+  LMS integration functionality that was included in this release (see
+  below for details)
+* Changed the role of the configuration file to be used only for
+  static settings, and introduced new keywords; please check
+  'config_example' before running CyLMS for the first time
+* Improved the integration with the Moodle LMS by adding support for
+  dynamic activity creation and removal; the Moosh shell for Moodle is
+  used for this purpose (https://moosh-online.com/)
+* Made "question" field not mandatory in the training file, so as to
+  allow more flexibility in content generation (e.g., enable use for
+  instructions, default content, etc.)
+* Added support for handling remote Moodle hosts, so that CyLMS
+  doesn't necessarily have to be installed directly on those hosts
+* Minor bug fixes and improvements
+
 cnt2lms v0.3
 ------------
 * Improved robustness when dealing with incorrect/missing input files

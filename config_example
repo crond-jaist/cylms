@@ -1,6 +1,5 @@
 [config]
-copy = 1
-source = /home/cyuser/moodle/cnt2lms/training_example.yml
-package_name = /home/cyuser/moodle/cnt2lms/training_example.zip
-remote_lms = moodle
-destination = /var/www/moodledata/repository/example/training_example.zip
+lms_host = root@moodle
+lms_repository = /var/moodledata/repository/training_content/
+course_name = CyTrONE Training
+section_id = 0

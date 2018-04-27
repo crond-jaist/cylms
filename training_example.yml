@@ -1,9 +1,9 @@
 ---
 - training:
   - id: Example
-    title: Example training questions for cnt2lms
+    title: Example training questions
     overview: |
-      <p>These are two example questions that demonstrate how to define training content for cnt2lms. Please check how the questions are displayed after they are converted to a SCORM package and uploaded to Moodle.</p>
+      <p>These are two example questions that demonstrate how to define training content for CyLMS. Please check how the questions are displayed after they are converted to a SCORM package and uploaded to Moodle.</p>
 
     questions:
     - id: EX-1

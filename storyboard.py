@@ -1,12 +1,13 @@
 class Storyboard:
     # Config file constants
+    ## Overall constants
     DEFAULT_CONFIG_FILE = "config_example"
     CONFIG_SECTION = "config"
-    CONFIG_ENABLE_COPY = "enable_copy"
-    CONFIG_INPUT_FILE = "input_file"
-    CONFIG_PACKAGE_NAME = "package_name"
-    CONFIG_REMOTE_LMS = "remote_lms"
-    CONFIG_DESTINATION = "destination"
+    ## Setting names
+    CONFIG_LMS_HOST = "lms_host"
+    CONFIG_LMS_REPOSITORY = "lms_repository"
+    CONFIG_COURSE_NAME = "course_name"
+    CONFIG_SECTION_ID = "section_id"
 
     # Content description file constants
     ## Top section about training
