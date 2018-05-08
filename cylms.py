@@ -86,25 +86,27 @@ def main(argv):
 
     # Parse command line arguments
     try:
-        opts, args = getopt.getopt(argv, "hc:f:a:r:", ["help", "convert=", "config-file=", "add-to-lms=", "remove-from-lms"])
+        # Make sure to add ':' for short-form and '=' for long-form options that require an argument
+        opts, args = getopt.getopt(argv, "hc:f:a:r:", ["help", "convert-content=", "config-file=", "add-to-lms=", "remove-from-lms="])
     except getopt.GetoptError as err:
         logging.error("Command-line argument error: {}".format(str(err)))
         usage()
-        quit(-1)
+        sys.exit(1)
+
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
-            quit()
-        elif opt in ("-c", "--convert"):
+            sys.exit()
+        elif opt in ("-c", "--convert-content"):
             yaml_file = os.path.abspath(arg)
             convert_action = True
-        elif opt in ("-f", "--config"):
+        elif opt in ("-f", "--config-file"):
             config_file = os.path.abspath(arg)
             cfg_manager = cfg_mgmt.CfgManager(config_file)
         elif opt in ("-a", "--add-to-lms"):
             session_id = arg
             add_to_lms_action = True
-        elif opt in ("-r", "--'remove-from-lms"):
+        elif opt in ("-r", "--remove-from-lms"):
             id_list = arg.split(",")
             # Check that split resulted in exactly 2 non-empty strings
             if id_list and len(id_list) == 2 and id_list[0] and id_list[1]:
@@ -115,13 +117,17 @@ def main(argv):
                 logging.error("Operation remove-from-lms requires a comma-separated argument (e.g., '1,10'),\n\t"\
                               "but a different format was encountered: '{}'".format(arg))
                 usage()
-                quit(-1)
+                sys.exit(1)
+        else:
+            # Nothing to be done on else, since unrecognized options are caught by
+            # the getopt.GetoptError exception above
+            pass
 
     # Check that at least one action is enabled
     if not (convert_action or add_to_lms_action or remove_from_lms_action):
         logging.error("No action argument was provided => abort execution.")
         usage()
-        quit(-1)
+        sys.exit(1)
         
     # Proceed with the convert-content action
     if convert_action:
@@ -135,7 +141,7 @@ def main(argv):
             logging.debug("Converted training content file '{}' successfully.".format(yaml_file))
         else:
             logging.error("Failed to convert training content file '{}'.".format(yaml_file))
-            quit(-1)
+            sys.exit(1)
 
     # Proceed with the add-to-lms action
     if add_to_lms_action:
@@ -159,27 +165,29 @@ def main(argv):
                         activity_id = lms_manager.add_activity(activity_name, target_file)
                         # Check whether adding the activity was successful
                         if activity_id:
-                            logging.debug("Added converted SCORM package '{}' to LMS successfully.".format(scorm_file))
-                            # We return the id as execution status (positive value means success)
-                            quit(activity_id)
+                            # If the value of the activity is needed, it should be parsed
+                            # from the program output by the caller
+                            logging.info("Added converted SCORM package '{}' to LMS successfully => activity_id={}"
+                                          .format(scorm_file, activity_id))
+                            sys.exit()
                         else:
                             logging.error("Failed to add converted SCORM package '{}' to LMS.".format(scorm_file))
-                            quit(-1)
+                            sys.exit(1)
                     else:
                         logging.error("SCORM package copy to LMS repository failed => abort execution.")
-                        quit(-1)
+                        sys.exit(1)
                 else:
                     logging.error("Session id is undefined => abort execution.")
                     usage()
-                    quit(-1)
+                    sys.exit(1)
             else:
                 logging.error("Configuration manager is undefined => abort execution.")
                 usage()
-                quit(-1)
+                sys.exit(1)
         else:
             logging.error("SCORM package file name is undefined => abort execution.\n\t (Note that the 'add-to-lms' action can only be used together with 'convert-content')")
             usage()
-            quit(-1)
+            sys.exit(1)
 
     # Proceed with the remove-from-lms action
     if remove_from_lms_action:
@@ -195,7 +203,7 @@ def main(argv):
             logging.debug("Removed activity with id '{}' from LMS successfully.".format(activity_id))
         else:
             logging.error("Failed to remove activity with id '{}' from LMS.".format(activity_id))
-            quit(-1)
+            sys.exit(1)
 
 #############################################################################
 # Run program

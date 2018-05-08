@@ -14,6 +14,7 @@ import codecs
 import re
 import logging
 import yaml
+import sys
 
 # Internal imports
 from storyboard import Storyboard
@@ -412,7 +413,7 @@ def main():
         logging.info("SCORM package created successfully for '{}'.".format(input_file))
     else:
         logging.error("Failed to create SCORM package for '{}'.".format(input_file))
-        quit(-1)
+        sys.exit(1)
 
 #############################################################################
 # Run main program

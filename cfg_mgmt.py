@@ -6,6 +6,7 @@
 # External imports
 import logging
 import ConfigParser
+import sys
 
 # Internal imports
 from storyboard import Storyboard
@@ -26,10 +27,10 @@ class CfgManager:
         if config_file_list:
             if not self.config_parser.has_section(Storyboard.CONFIG_SECTION):
                 logging.error("Configuration file doesn't contain required section '{}' => abort execution.".format(Storyboard.CONFIG_SECTION))
-                quit(-1)
+                sys.exit(1)
         else:
             logging.error("Cannot read configuration file '{}' => abort execution.".format(config_file))
-            quit(-1)
+            sys.exit(1)
         
     # Get value of given setting from the configuration file;
     # return None if setting is not present
@@ -45,7 +46,7 @@ class CfgManager:
                 return None
         else:
             logging.error("Invalid configuration parser => abort execution.")
-            quit(-1)
+            sys.exit(1)
 
 
 #############################################################################

@@ -5,10 +5,10 @@
 #############################################################################
 
 # External imports
-#import sys
 import subprocess
 import logging
 import os
+import sys
 
 # Internal imports
 import cfg_mgmt
@@ -121,8 +121,8 @@ class LmsManager:
                         if ACTIVITY_ID_FIELD in output_line:
                             activity_id = output_line.split("=")[1]
                             if activity_id:
-                                logging.info("Added activity for course id '{}' section id '{}' with name '{}' => id is {}."
-                                             .format(course_id, self.section_id, activity_name, activity_id))
+                                logging.info("Added activity '{}' with id '{}' for course '{}' section '{}'."
+                                             .format(activity_name, activity_id, course_id, self.section_id))
                                 return activity_id
 
                     # If we reach this point, it means an error occurred
@@ -155,8 +155,8 @@ class LmsManager:
 
                 # If deletion succeeds, we also remove the associated package file
                 package_file = self.lms_repository + package_file
-                rm_output = subprocess.check_output(["ssh", self.lms_host, "rm", package_file],
-                                                    stderr=subprocess.STDOUT)
+                subprocess.check_output(["ssh", self.lms_host, "rm", package_file],
+                                        stderr=subprocess.STDOUT)
 
                 # If we reach this point, it means no error occured
                 return True
@@ -216,7 +216,7 @@ def main():
             logging.info("Retrieved id for course with name '{}': {}".format(lms_manager.course_name, course_id))
         else:
             logging.error("Failed to get id for course '{}'.".format(lms_manager.course_name))
-            quit(-1)            
+            sys.exit(1)
         
     ## Add activity
     elif action == ADD_ACTION:
@@ -227,7 +227,7 @@ def main():
             logging.info("Added activity with id '{}'.".format(activity_id))
         else:
             logging.error("Failed to add activity '{}'.".format(activity_name))
-            quit(-1)
+            sys.exit(1)
 
     ## Delete activity
     elif action == DELETE_ACTION:
@@ -238,7 +238,7 @@ def main():
             logging.info("Deleted activity with id '{}'.".format(activity_id))
         else:
             logging.error("Failed to delete activity with id '{}'.".format(activity_id))
-            quit(-1)
+            sys.exit(1)
 
     ## Copy package
     elif action == COPY_ACTION:
@@ -249,7 +249,7 @@ def main():
             logging.info("Copied package '{}' to LMS repository.".format(package_file))
         else:
             logging.error("Failed to copy package '{}'.".format(package_file))
-            quit(-1)
+            sys.exit(1)
     
     else:
         logging.error("No action was selected => do nothing.")
