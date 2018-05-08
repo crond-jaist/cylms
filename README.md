@@ -38,17 +38,24 @@ In order to setup CyLMS, the following steps are required:
 
   `$ /path/to/create_scorm_template.sh /full/path/to/cylms`
 
-* Download and start the sample Moodle VM that is also provided on
+* Download and extract the sample Moodle VM that is also provided on
   GitHub:
 
   `$ tar -zxvf moodle.tgz`
 
+  NOTE: It is also possible to set up your own Moodle host; if you
+  prefer to do so, follow the instructions in the User Guide.
+
+* Register and start the sample Moodle VM:
+ 
   `$ virsh define moodle.xml`
 
   `$ virsh start moodle`
 
-  NOTE: It is also possible to set up your own Moodle host; if you
-  prefer to do so, follow the instructions in the User Guide.
+  NOTE: Before running the commands above, you will first need to
+  update the tag `<source file='...'/>` in the file `moodle.xml` to
+  specify the actual location of the VM disk image `moodle.qcow2` on
+  your host.
 
 ### Utilization
 
