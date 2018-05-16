@@ -11,7 +11,7 @@ Design (CROND) NEC-endowed chair at the Japan Advanced Institute of
 Science and Technology (JAIST). An overview of CyLMS is provided in
 the figure below.
 
-![Overview of CyLMS](https://github.com/crond-jaist/cnt2lms/blob/master/cylms_overview.png)
+![Overview of CyLMS](https://github.com/crond-jaist/cylms/blob/master/cylms_overview.png)
 
 If interested, please download the latest release of CyLMS, and let us
 know if you have any issues. A sample Moodle virtual machine and a
@@ -92,7 +92,7 @@ Below we provide a brief overview of the main CyLMS components:
 * `cylms.py`: Main program used to access all the functionality
   provided by CyLMS.
 
-* `cnt2lms`: Core module that converts a given training content
+* `cnt2lms.py`: Core module that converts a given training content
   description file to an equivalent SCORM package.
 
 * `lms_mgmt.py`: Module that contains integration support with the
