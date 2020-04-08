@@ -1,4 +1,31 @@
 
+CyLMS v1.1
+----------
+* Added support for cyber range access via VNC by displaying a button
+  labeled "ACCESS CYBER RANGE" on the SCORM package training pages,
+  and setting up a corresponding VNC service on the LMS server
+* Improved the manner in which activities are displayed by adding the
+  training title and time when it was added to Moodle
+* Added support for specifying a directory where resources, such as
+  images, included in the training content are located; the files in
+  this directory are automatically copied into the SCORM package
+* Made the training title an optional field; the training id is used
+  instead of it if the title is not defined
+* Added support for specifying multiple correct answers in the YAML
+  file by using the CSV format
+* Improved the quiz result page of the SCORM package template
+* Added a demo quiz to illustrate more thoroughly the CyLMS content
+  representation format
+* Improved handling of choices for multiple-choice questions: list
+  format is now also supported
+* Added support for enabling/disabling the display of the "Access
+  Range" button on SCORM package training pages
+* Improved handling of ZIP archives by using the internal Python
+  library "shutil"
+* Added script "configure.py" to automate the set up procedure by
+  using a wizard-like command-line interface
+* Minor bug fixes and improvements
+
 CyLMS v1.0
 ----------
 * Renamed the tool set from cnt2lms to CyLMS; the main program called

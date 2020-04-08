@@ -1,23 +1,26 @@
 # CyLMS: Cybersecurity Training Support for LMS
 
-CyLMS is a set of tools for adding cybersecurity training support to
-Learning Management Systems (LMS). The main feature of CyLMS is
-related to the conversion of a custom training content representation
-in YAML format to the SCORM format that is widely used in LMSs. In
+CyLMS is a set of tools that adds cybersecurity training support to
+Learning Management Systems (LMSs). The main function of CyLMS is to
+convert a custom training content representation provided in YAML
+format into the SCORM format that is widely supported by LMSs. In
 addition, CyLMS provides integration with the Moodle LMS, for
-operations such as dynamically adding and removing activities to
-it. CyLMS is being developed by the Cyber Range Organization and
+operations such as dynamically adding and removing training activities
+to it. CyLMS is being developed by the Cyber Range Organization and
 Design (CROND) NEC-endowed chair at the Japan Advanced Institute of
 Science and Technology (JAIST). An overview of CyLMS is provided in
 the figure below.
 
 ![Overview of CyLMS](https://github.com/crond-jaist/cylms/blob/master/cylms_overview.png)
 
-If interested, please download the latest release of CyLMS, and let us
-know if you have any issues. A sample Moodle virtual machine and a
-User Guide are also provided. Note that CyLMS is mainly intended for
-use in conjunction with the integrated cybersecurity training
-framework CyTrONE, which is also developed by CROND at JAIST.
+More details about CyLMS are available in the User Guide published on
+the [releases](https://github.com/crond-jaist/cylms/releases) page
+that also includes the latest stable version of the software. We also
+provide a sample Moodle virtual machine as a convenient way to quickly
+start using our software. Note that CyLMS is mainly intended for use
+in conjunction with the integrated cybersecurity training framework
+[CyTrONE](https://github.com/crond-jaist/cytrone) that is also
+developed by CROND at JAIST.
 
 
 ## Quick Start
@@ -27,35 +30,30 @@ refer to the User Guide for details.
 
 ### Setup
 
-In order to setup CyLMS, the following steps are required:
+The following steps are required to setup CyLMS:
 
-* Download and extract the current release source code from GitHub:
+1. Download the next three files from the latest
+   [release](https://github.com/crond-jaist/cylms/releases) of CyLMS
+   on GitHub:
 
-  `$ tar -zxvf cylms-X.Y.tar.gz --directory /target/directory`
+  - `create scorm template.sh`: Self-extractable archive for
+    creating a SCORM package template
+  - `moodle.tgz`: Archive containing the sample Moodle VM that can be
+    used to get started with CyLMS
+  - `cylms-X.Y.tar.gz` (where X.Y is the version number): Source
+    code of CyLMS, available via the link "Source code (tar.gz)"
 
-* Download and run the file "create_scorm_template.sh" to create the
-  SCORM package template required by CyLMS:
+2. Extract `cylms-X.Y.tar.gz` and `moodle.tgz` to the target directory
+   of your choice, such as `/home/cyuser`:
 
-  `$ /path/to/create_scorm_template.sh /full/path/to/cylms`
+  `$ tar -xzf cylms-X.Y.tar.gz --directory /target/directory`
 
-* Download and extract the sample Moodle VM that is also provided on
-  GitHub:
+  `$ tar -xzf moodle.tgz --directory /target/directory/cylms`
 
-  `$ tar -zxvf moodle.tgz`
+3. Run the configuration script `configure.py` to finish setting up
+   CyLMS:
 
-  NOTE: It is also possible to set up your own Moodle host; if you
-  prefer to do so, follow the instructions in the User Guide.
-
-* Register and start the sample Moodle VM:
- 
-  `$ virsh define moodle.xml`
-
-  `$ virsh start moodle`
-
-  NOTE: Before running the commands above, you will first need to
-  update the tag `<source file='...'/>` in the file `moodle.xml` to
-  specify the actual location of the VM disk image `moodle.qcow2` on
-  your host.
+  `$ ./configure.py`
 
 ### Utilization
 
@@ -64,25 +62,29 @@ The two main operations supported by CyLMS are:
 1. **Convert training content to SCORM package and add it to LMS**
 
    The command below converts the sample training content file
-   `training_example` using the configuration file `config_example`,
-   and adds the generated SCORM package to LMS as `Training Session
-   #1`:
+   `training_example.yml` using the configuration file `config_file`,
+   and adds the generated SCORM package to LMS as "Activity #1:
+   Example questions":
 
-   `$ ./cylms.py --convert-content training_example.yml --config-file config_example
---add-to-lms 1`
+   `$ ./cylms.py --convert-content training_example.yml --config-file config_file --add-to-lms 1`
 
-   NOTE: The above command will display an activity id which is
+   NOTE: The command above will display an activity id which is
    required for the operation below.
 
 2. **Remove a training session from LMS**
 
-   The command below uses the configuration file `config_example` to
-   remove `Training Session #1`. We denote the activity id returned by
-   the `add-to-lms` operation above by `ID`, which should be replaced
+   The next command uses the configuration file `config_file` to
+   remove the created activity. We denote the activity id returned by
+   the `add-to-lms` operation above by `ID`, but it should be replaced
    with the actual value displayed after executing the previous
    command:
 
-   `$ ./cylms.py --config-file config_example --remove-from-lms 1,ID`
+   `$ ./cylms.py --config-file config_file --remove-from-lms 1,ID`
+
+For further details, including on how to set up cyber range access via
+VNC so that trainees can access the training enviornment associated to
+a certain learning content more conveniently, please refer to the User
+Guide.
 
 
 ## Program overview
@@ -90,36 +92,39 @@ The two main operations supported by CyLMS are:
 Below we provide a brief overview of the main CyLMS components:
 
 * `cylms.py`: Main program used to access all the functionality
-  provided by CyLMS.
+  provided by CyLMS
 
 * `cnt2lms.py`: Core module that converts a given training content
-  description file to an equivalent SCORM package.
+  description file to an equivalent SCORM package
 
 * `lms_mgmt.py`: Module that contains integration support with the
   Moodle LMS, such as adding and removing activities, etc.
 
-* `cfg_mgmt.py`: Module used for managing the configuration file.
+* `cfg_mgmt.py`: Module used for managing the configuration file
 
 For your convenience we also provide some sample files:
 
-* `training_example.yml`: Example training content file; for details
-  about the training content representation used in CyLMS see the User
-  Guide.
+* `demo quiz.yml` and `training_example.yml`: Example training content
+  files; for details about the training content representation used in
+  CyLMS see the User Guide
 
 * `config_example`: Example configuration file with settings regarding
   the Moodle LMS that is to be managed via CyLMS, such as host name,
   repository directory, course name, etc. This file needs to be
   updated if you modify the provided Moodle VM, or you set up your own
-  Moodle host.
+  Moodle host
 
 
 ## References
 
-For a research background about CyLMS, please consult the following paper:
+For a research background regarding CyLMS, please refer to the
+following paper:
 
-* D. Tang, C. Pham, K. Chinen, R. Beuran, "Interactive Cybersecurity
-  Defense Training Inspired by Web-based Learning Theory", IEEE 9th
-  International Conference on Engineering Education (ICEED 2017),
-  Kanazawa, Japan, November 9-10, 2017, pp. 103-108.
+* R. Beuran, D. Tang, Z. Tan, S. Hasegawa, Y. Tan, Y. Shinoda,
+  "Supporting Cybersecurity Education and Training via LMS
+  Integration: CyLMS", Springer Education and Information
+  Technologies, November 2019, vol. 24, no. 6, pp. 3619-3643.
 
-For the list of contributors, please check the file CONTRIBUTORS.
+For a list of contributors to this project, please check the file
+CONTRIBUTORS included with the source code.
+
