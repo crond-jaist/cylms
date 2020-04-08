@@ -1,0 +1,42 @@
+---
+- training:
+  - id: CyLMS Demo Quiz
+    resources: images
+    overview: >
+      <img src="cytrone_logo.png" align="right">
+      The questions below demonstrate the training content representation features of CyLMS, which is part of the CyTrONE integrated cybersecurity training framework. Please refer to the file 'demo_quiz.yml' included with the CyLMS distribution for practical examples of the representation syntax. For more information about the features included in this demo quiz, please consult the CyLMS User Guide.
+
+    questions:
+
+    # Basic question with an unique answer and three hints
+    - id: DEMO-01
+      body: Indicate the main operating system supported by CyLMS.
+      answer: Ubuntu
+      hints:
+        - The name starts with 'U' and also ends with 'u'.
+        - The name has 6 letters in total.
+        - The letter sequence in the middle is 'bunt'.
+
+    # Same question as above, but formulated now as a multiple-choice question; only one hint is provided
+    - id: DEMO-02
+      body: Select the main operating system sypported by CyLMS from the list below.
+      choices: CentOS, Ubuntu, Windows
+      answer: Ubuntu
+      hints:
+        - Refer to the previous question.
+
+    # A question that provides several long choices as a list
+    - id: DEMO-03
+      body: Select the most suitable and complete definition for the term "malware".
+      choices:
+        - An interface between the software and hardware components of a certain system.
+        - A harmful program disguised as a normal application to convince users to install it.
+        - A piece of malicious software designed to damage a computer or computer network.
+      answer: A piece of malicious software designed to damage a computer or computer network.
+      hints:
+        - Really?! How about googling the word?
+
+    # A question with several valid answers; no hint is provided this time
+    - id: DEMO-04
+      body: Enter the abbreviation for a common type of cyberattack which attempts to make a server unavailable by overloading it with a large amount of requests.
+      answer: DoS, DDoS, dos, ddos

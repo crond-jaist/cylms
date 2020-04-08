@@ -1,12 +1,12 @@
 ---
 - training:
-  - id: Example
-    title: Example training questions
-    overview: |
-      <p>These are two example questions that demonstrate how to define training content for CyLMS. Please check how the questions are displayed after they are converted to a SCORM package and uploaded to Moodle.</p>
+  - id: EXAMPLE
+    title: Example questions
+    overview: >
+      These are two example questions that demonstrate how to define training content for CyLMS. Please check how the questions are displayed after they are converted to a SCORM package and uploaded to Moodle.
 
     questions:
-    - id: EX-1
+    - id: EXAMPLE-01
       body: What is the name of the Linux distribution used by this server? Indicate only the name, without version or architecture, e.g., CentOS.
       answer: Ubuntu
       hints:
@@ -14,7 +14,7 @@
         - One of the most relevant files has a name ending in "release".
         - <code>$ cat /etc/*-release</code>
 
-    - id: EX-2
+    - id: EXAMPLE-02
       body: What is the name of the account you are logged in as?
       choices: root, admin, guest01, trainee01
       answer: trainee01
