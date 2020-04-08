@@ -38,9 +38,9 @@ class CfgManager:
         if self.config_parser:
             if self.config_parser.has_option(Storyboard.CONFIG_SECTION, setting):
                 logging.debug("Setting '{}' present in configuration file.".format(setting))
-                # Some settings could be treated in a special manner
-#                if setting == Storyboard.CONFIG_ENABLE_COPY:
-#                    return self.config_parser.getboolean(Storyboard.CONFIG_SECTION, setting)
+                # Some settings are treated in a special manner
+                if setting == Storyboard.CONFIG_ENABLE_VNC:
+                    return self.config_parser.getboolean(Storyboard.CONFIG_SECTION, setting)
                 return self.config_parser.get(Storyboard.CONFIG_SECTION, setting)
             else:
                 return None

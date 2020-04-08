@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 #############################################################################
 # LMS management functionality for CyLMS
@@ -21,14 +20,22 @@ from storyboard import Storyboard
 ## Simulation mode flag for testing purposes
 SIMULATION_MODE = False
 
+## ssh connection options (need to be separated because of limitations on how
+## options are passed to subprocess.check_output() calls)
+SSH_OPT1 = "-o UserKnownHostsFile=/dev/null"
+SSH_OPT2 = "-o StrictHostKeyChecking=no"
+
 ## Moosh-related constants
-MOOSH_COMMAND = "moosh/moosh.php -p /var/www/html/moodle/"
+MOOSH_COMMAND = "/root/moosh/moosh.php -p /var/www/html/moodle/"
 ACTIVITY_ID_FIELD = "cmid="
-### Constants below are  based on values from /var/www/html/moodle/mod/scorm/locallib.php
-PACKAGEFILEPATH_OPTION = "packagefilepath"
-INTRO_OPTION ="intro"
-UPDATEFREQ_OPTION = "updatefreq"
-SCORM_UPDATE_EVERYTIME = 3
+### Constants below are based on values from /var/www/html/moodle/mod/scorm/locallib.php
+### (and from /var/www/html/moodle/lang/en/moodle.php for showdescription)
+DESCRIPTION_OPTION ="intro"
+SHOW_DESCRIPTION_ENABLED="showdescription=1"
+PACKAGE_FILEPATH_OPTION = "packagefilepath"
+UPDATE_FREQUENCY_OPTION = "updatefreq"
+SCORM_UPDATE_NEVER = 0
+#SCORM_UPDATE_EVERYTIME = 3
 
 ## Test action-related constants
 GET_ID_ACTION = 0
@@ -70,7 +77,8 @@ class LmsManager:
             return course_id
         else:
             # Get course list
-            ssh_output = subprocess.check_output(["ssh", self.lms_host, MOOSH_COMMAND, "course-list"])
+            ssh_output = subprocess.check_output(["ssh", SSH_OPT1, SSH_OPT2, self.lms_host, MOOSH_COMMAND,
+                                                  "course-list"], stderr=subprocess.STDOUT)
             logging.debug("Course list output: {}".format(ssh_output.rstrip()))
 
             # Find the appropriate course
@@ -90,7 +98,7 @@ class LmsManager:
             return None
 
     # Add an activity based on course id, section id and package file
-    def add_activity(self, activity_name, package_file):
+    def add_activity(self, activity_name, activity_description, package_file):
 
         if SIMULATION_MODE:
             logging.debug("Simulation mode: Add activity '{}'.".format(activity_name))
@@ -105,11 +113,12 @@ class LmsManager:
                 try:
                     # Add repository prefix to target file
                     package_file = self.lms_repository + package_file
-                    options_string = PACKAGEFILEPATH_OPTION + "=" + package_file + "," \
-                                     + UPDATEFREQ_OPTION + "=" + str(SCORM_UPDATE_EVERYTIME) + "," \
-                                     + INTRO_OPTION +"='" + activity_name + "'"
+                    options_string = DESCRIPTION_OPTION + "='" + activity_description + "'," \
+                                     + SHOW_DESCRIPTION_ENABLED + "," \
+                                     + PACKAGE_FILEPATH_OPTION + "=" + package_file + "," \
+                                     + UPDATE_FREQUENCY_OPTION + "=" + str(SCORM_UPDATE_NEVER)
                     ssh_output = subprocess.check_output(
-                        ["ssh", self.lms_host, MOOSH_COMMAND, "activity-add",
+                        ["ssh", SSH_OPT1, SSH_OPT2, self.lms_host, MOOSH_COMMAND, "activity-add",
                          "--section " + self.section_id, "--name '" + activity_name + "'",
                          "--options " + options_string, "scorm", course_id],
                         stderr=subprocess.STDOUT)
@@ -148,14 +157,14 @@ class LmsManager:
         else:
             # Delete activity
             try:
-                ssh_output = subprocess.check_output(["ssh", self.lms_host, MOOSH_COMMAND,
+                ssh_output = subprocess.check_output(["ssh", SSH_OPT1, SSH_OPT2, self.lms_host, MOOSH_COMMAND,
                                                       "activity-delete", str(activity_id)],
                                                      stderr=subprocess.STDOUT)
                 logging.debug("Delete activity output: {}".format(ssh_output.rstrip()))
 
                 # If deletion succeeds, we also remove the associated package file
-                package_file = self.lms_repository + package_file
-                subprocess.check_output(["ssh", self.lms_host, "rm", package_file],
+                package_file = "-f " + self.lms_repository + package_file
+                subprocess.check_output(["ssh", SSH_OPT1, SSH_OPT2, self.lms_host, "rm", package_file],
                                         stderr=subprocess.STDOUT)
 
                 # If we reach this point, it means no error occured
@@ -174,12 +183,12 @@ class LmsManager:
         target_file = self.lms_repository + target_file
         
         if SIMULATION_MODE:
-            logging.info("Simulation mode: Copy package '{}' to\n\tTarget '{}'.".format(package_file, target_file))
+            logging.info("Simulation mode: Copy package '{}' to\n\tTarget '{}' on {}.".format(package_file, target_file, self.lms_host))
             return True
         else:
             # Display operation info
-            logging.info("Copy package '{}' to\n\tTarget '{}'.".format(package_file, target_file))
-            command = "scp -q {} {}:{}".format(package_file, self.lms_host, target_file)
+            logging.info("Copy package '{}' to\n\tTarget '{}' on {}.".format(package_file, target_file, self.lms_host))
+            command = "scp -q {} {} {} {}:{}".format(SSH_OPT1, SSH_OPT2, package_file, self.lms_host, target_file)
             logging.debug("Copy command: {}".format(command))
             return_value = os.system(command)
             exit_status = os.WEXITSTATUS(return_value)
@@ -220,9 +229,10 @@ def main():
         
     ## Add activity
     elif action == ADD_ACTION:
-        activity_name = "Training Session #99"
+        activity_name = "Activity #N: Training name"
+        activity_description = "Created on YYYY-MM-DD hh:mm:ss"
         package_file = "training_example.yml.zip"
-        activity_id = lms_manager.add_activity(activity_name, package_file)
+        activity_id = lms_manager.add_activity(activity_name, activity_description, package_file)
         if activity_id:
             logging.info("Added activity with id '{}'.".format(activity_id))
         else:
