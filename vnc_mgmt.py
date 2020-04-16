@@ -86,12 +86,16 @@ class VncManager:
         tunnel_ip_addresses = []
 
         # Get IP addresses of entry points
-        with open(tunnel_filename) as tunnel_file:
-            for count,line in enumerate(tunnel_file):
-                if SSH_TAG in line:
-                    tunnel_ip_address = line.split(" ")[TUNNEL_UNIT_INDEX].split(":")[TUNNEL_IP_INDEX]
-                    tunnel_ip_addresses.append(tunnel_ip_address)
-                    instance_index += 1
+        try:
+            with open(tunnel_filename) as tunnel_file:
+                for count,line in enumerate(tunnel_file):
+                    if SSH_TAG in line:
+                        tunnel_ip_address = line.split(" ")[TUNNEL_UNIT_INDEX].split(":")[TUNNEL_IP_INDEX]
+                        tunnel_ip_addresses.append(tunnel_ip_address)
+                        instance_index += 1
+        except IOError as e:
+            logging.error("I/O Error: " + str(e))
+            return None
 
         # Prepare range details file name
         details_filename = DETAILS_FILENAME_TEMPLATE.format(self.range_dir, range_id, range_id)
@@ -102,15 +106,19 @@ class VncManager:
 
         # Get IP addresses of all domains and find the domain name associated with the
         # entry point addresses determined above
-        with open(details_filename) as details_file:
-            for count,line in enumerate(details_file):
-                if KVM_DOMAIN_TAG in line:
-                    kvm_domain = line.split(":")[VALUE_INDEX].strip()
-                elif INTERFACE_TAG in line:
-                    ip_address = line.split(":")[VALUE_INDEX].strip()
-                    if ip_address in tunnel_ip_addresses:
-                        kvm_domains.append(kvm_domain)
-                        instance_index += 1
+        try:
+            with open(details_filename) as details_file:
+                for count,line in enumerate(details_file):
+                    if KVM_DOMAIN_TAG in line:
+                        kvm_domain = line.split(":")[VALUE_INDEX].strip()
+                    elif INTERFACE_TAG in line:
+                        ip_address = line.split(":")[VALUE_INDEX].strip()
+                        if ip_address in tunnel_ip_addresses:
+                            kvm_domains.append(kvm_domain)
+                            instance_index += 1
+        except IOError as e:
+            logging.error("I/O Error: " + str(e))
+            return None
 
         # Get VNC ports for entry points by calling 'virsh' 
         logging.debug("  - Determine entry point VNC port(s)")

@@ -89,6 +89,7 @@ def main(args):
     except IOError:
         # In case file cannot be opened/read, we use the default value
         pass
+
     print("#########################################################################")
     print("{}: Cybersecurity Training Support for LMS".format(version_string))
     print("#########################################################################")
@@ -149,7 +150,7 @@ def main(args):
     scorm_file = None
 
     # Check that at least one action is enabled
-    if not (convert_action or add_to_lms_action or remove_from_lms_action):
+    if not (convert_action or add_to_lms_action or remove_from_lms_action or vnc_setup_action):
         logging.error("No action argument was provided => abort execution.")
         usage()
         sys.exit(1)
@@ -255,7 +256,7 @@ def main(args):
                         logging.debug("Removed activity with id '{}' from LMS successfully.".format(activity_id))
                     else:
                         logging.error("Failed to remove activity with id '{}' from LMS.".format(activity_id))
-                        sys.exit(1)
+                        sys.exit() # Not fatal error anymore, should it be? sys.exit(1)
                 else:
                     logging.error("Internal error: LMS manager is undefined => abort execution.")
                     sys.exit(1)
@@ -275,7 +276,7 @@ def main(args):
                             sys.exit() # It is OK to exit here as no command chaining is possible
                         else:
                             logging.error("Failed to stop VNC servers => abort VNC server stopping")
-                            sys.exit(1)
+                            sys.exit() # Not fatal error anymore, should it be? sys.exit(1)
                     else:
                         logging.error("Failed to get cyber range info => abort VNC server stopping")
                         sys.exit(1)
