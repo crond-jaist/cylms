@@ -25,7 +25,7 @@ developed by CROND at JAIST.
 
 ## Setup
 
-The following steps are required to setup CyLMS:
+The following steps are required in order to set up CyLMS:
 
 1. Download the next three files from the latest
    [release](https://github.com/crond-jaist/cylms/releases) of CyLMS
@@ -53,7 +53,7 @@ The following steps are required to setup CyLMS:
 
 ## Utilization
 
-The two main operations supported by CyLMS are:
+The two main operations supported by CyLMS are introduced below:
 
 1. **Convert training content to SCORM package and add it to LMS**
 
@@ -85,8 +85,8 @@ Guide.
 
 ## Sample files
 
-In addition to the source code, so sample files are provided for your
-convenience:
+In addition to the source code, some sample files are included for
+your convenience:
 
 * `demo quiz.yml` and `training_example.yml`: Example training content
   files; for details about the training content representation used in
