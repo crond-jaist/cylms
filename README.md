@@ -23,12 +23,7 @@ in conjunction with the integrated cybersecurity training framework
 developed by CROND at JAIST.
 
 
-## Quick Start
-
-This section provides a brief introduction on how to use CyLMS; please
-refer to the User Guide for details.
-
-### Setup
+## Setup
 
 The following steps are required to setup CyLMS:
 
@@ -43,8 +38,8 @@ The following steps are required to setup CyLMS:
    - `cylms-X.Y.tar.gz` (where X.Y is the version number): Source code
      of CyLMS, available via the link "Source code (tar.gz)"
 
-2. Extract `cylms-X.Y.tar.gz` and `moodle.tgz` to the target directory
-   of your choice, such as `/home/cyuser`:
+2. Extract `cylms-X.Y.tar.gz` and `moodle.tgz` into the target
+   directory of your choice, such as `/home/cyuser`:
 
    `$ tar -xzf cylms-X.Y.tar.gz --directory /target/directory`
 
@@ -55,7 +50,8 @@ The following steps are required to setup CyLMS:
 
    `$ ./configure.py`
 
-### Utilization
+
+## Utilization
 
 The two main operations supported by CyLMS are:
 
@@ -87,13 +83,11 @@ a certain learning content more conveniently, please refer to the User
 Guide.
 
 
-## Program overview
+## Sample files
 
-Below we provide a brief overview of the main CyLMS components
-included with the source code:
+In addition to the source code, so sample files are provided for your
+convenience:
 
-* `cylms.py`: Main program used to access all the functionality
-  provided by CyLMS
 * `demo quiz.yml` and `training_example.yml`: Example training content
   files; for details about the training content representation used in
   CyLMS see the User Guide
