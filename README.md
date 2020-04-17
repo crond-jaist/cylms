@@ -36,24 +36,24 @@ The following steps are required to setup CyLMS:
    [release](https://github.com/crond-jaist/cylms/releases) of CyLMS
    on GitHub:
 
-  - `create scorm template.sh`: Self-extractable archive for
-    creating a SCORM package template
-  - `moodle.tgz`: Archive containing the sample Moodle VM that can be
-    used to get started with CyLMS
-  - `cylms-X.Y.tar.gz` (where X.Y is the version number): Source
-    code of CyLMS, available via the link "Source code (tar.gz)"
+   - `create scorm template.sh`: Self-extractable archive for
+     creating a SCORM package template
+   - `moodle.tgz`: Archive containing the sample Moodle VM that can be
+     used to get started with CyLMS
+   - `cylms-X.Y.tar.gz` (where X.Y is the version number): Source code
+     of CyLMS, available via the link "Source code (tar.gz)"
 
 2. Extract `cylms-X.Y.tar.gz` and `moodle.tgz` to the target directory
    of your choice, such as `/home/cyuser`:
 
-  `$ tar -xzf cylms-X.Y.tar.gz --directory /target/directory`
+   `$ tar -xzf cylms-X.Y.tar.gz --directory /target/directory`
 
-  `$ tar -xzf moodle.tgz --directory /target/directory/cylms`
+   `$ tar -xzf moodle.tgz --directory /target/directory/cylms`
 
 3. Run the configuration script `configure.py` to finish setting up
    CyLMS:
 
-  `$ ./configure.py`
+   `$ ./configure.py`
 
 ### Utilization
 
@@ -89,25 +89,14 @@ Guide.
 
 ## Program overview
 
-Below we provide a brief overview of the main CyLMS components:
+Below we provide a brief overview of the main CyLMS components
+included with the source code:
 
 * `cylms.py`: Main program used to access all the functionality
   provided by CyLMS
-
-* `cnt2lms.py`: Core module that converts a given training content
-  description file to an equivalent SCORM package
-
-* `lms_mgmt.py`: Module that contains integration support with the
-  Moodle LMS, such as adding and removing activities, etc.
-
-* `cfg_mgmt.py`: Module used for managing the configuration file
-
-For your convenience we also provide some sample files:
-
 * `demo quiz.yml` and `training_example.yml`: Example training content
   files; for details about the training content representation used in
   CyLMS see the User Guide
-
 * `config_example`: Example configuration file with settings regarding
   the Moodle LMS that is to be managed via CyLMS, such as host name,
   repository directory, course name, etc. This file needs to be
