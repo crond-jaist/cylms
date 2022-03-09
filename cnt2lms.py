@@ -294,7 +294,7 @@ def yaml2scorm(input_file, scorm_file, program_path, enable_vnc, session_id, con
 
     try:
         with codecs.open(input_file, 'r', 'utf-8') as stream:
-            yaml_stream = yaml.load(stream)
+            yaml_stream = yaml.load(stream, Loader=yaml.SafeLoader)
             logging.debug("YAML stream: " + str(yaml_stream))
             if not yaml_stream:
                 logging.error("No data in the input file: " + input_file)
