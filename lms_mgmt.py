@@ -117,9 +117,12 @@ class LmsManager:
                                      + SHOW_DESCRIPTION_ENABLED + "," \
                                      + PACKAGE_FILEPATH_OPTION + "=" + package_file + "," \
                                      + UPDATE_FREQUENCY_OPTION + "=" + str(SCORM_UPDATE_NEVER)
+                    logging.debug("Options string: {}".format(options_string))
+                    logging.debug("Options string: {}".format(activity_name))
+                    # NOTE: Quoting style changed below for activity name, as the name itself may include single quotes
                     ssh_output = subprocess.check_output(
                         ["ssh", SSH_OPT1, SSH_OPT2, self.lms_host, MOOSH_COMMAND, "activity-add",
-                         "--section " + self.section_id, "--name '" + activity_name + "'",
+                         "--section " + self.section_id, '--name "' + activity_name + '"',
                          "--options " + options_string, "scorm", course_id],
                         stderr=subprocess.STDOUT)
                     logging.debug("Add activity output: {}".format(ssh_output.rstrip()))
