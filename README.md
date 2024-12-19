@@ -1,3 +1,8 @@
+## Important Notice
+
+### The CROND NEC-endowed chair at JAIST that has originally developed CyLMS ceased to exist in March 2021, and future development will be carried out by the Cybersecurity Lab at JAIST in a [new repository](https://github.com/cyb3rlab/cylms). The original CyLMS will not be receiving any future updates, so please switch over to the new version as soon as you are able to do so.
+
+
 # CyLMS: Cybersecurity Training Support for LMS
 
 CyLMS is a set of tools that adds cybersecurity training support to
